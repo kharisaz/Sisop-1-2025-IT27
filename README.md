@@ -1,1 +1,2 @@
-# Sisop-1-2025-IT27
+Kelompok IT27
+Khumaidi Kharis Az-zacky - 5027241049
