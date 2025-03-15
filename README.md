@@ -1,18 +1,11 @@
-===========[Kelompok IT27]=============
+===========[Kelompok IT27]=============<br />
+Khumaidi Kharis Az-zacky     - 5027241049<br />
+Mohamad Arkan Zahir Asyafiq  - 5027241120<br />
+Abiyyu Raihan Putra Wikanto  - 5027241042<br /><br />
+------------------------------------------<br />
+============[PENJELASAN SOAL]=============<br />
+------------------------------------------<br />
 
-
-Khumaidi Kharis Az-zacky     - 5027241049
-
-Mohamad Arkan Zahir Asyafiq  - 5027241120
-
-Abiyyu Raihan Putra Wikanto  - 5027241042
-
-
-
-------------------------------------------
-============[PENJELASAN SOAL]=============
-------------------------------------------
-
-#soal_1
-#soal_3
-#soal_4
+#soal_1 <br />
+#soal_3 <br />
+#soal_4<br />
