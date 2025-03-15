@@ -11,6 +11,22 @@ Abiyyu Raihan Putra Wikanto  - 5027241042
 #soal_1
 
 #soal_3
+Script Bash ini menampilkan berbagai fitur interaktif. Fitur-fitur berupa tampilan word of affirmation (untuk Speak to Me), progress bar (On the Run), jam real-time (Time), efek matrix dengan simbol mata uang (Money), dan Penunjuk proses (Brain Damage).
+
+-- Speak to Me
+Menampilkan word of affirmation yang diperbarui setiap detik dengan menggunakan API dari affirmations.dev.
+
+-- On the Run
+Menampilkan progress bar dengan interval acak.
+
+-- Time
+Menampilkan jam real-time yang diperbarui setiap detik, menunjukkan tanggal, jam, menit, dan detik.
+
+-- Money
+Efek matrix dengan simbol mata uang yang jatuh secara acak di terminal, menyerupai efek dari cmatrix.
+
+-- Brain Damage
+Menampilkan daftar 10 proses dengan konsumsi memori tertinggi dalam sistem, diperbarui setiap detik seperti task manager.
 
 #soal_4
 
