@@ -30,4 +30,18 @@ Menampilkan daftar 10 proses dengan konsumsi memori tertinggi dalam sistem, dipe
 
 #soal_4
 
-1.
+Script Bash ini menampilkan fitur-fitur berupa:
+
+1.fungsi info, menampilkan informasi terkait pokemon dengan usage dan raw tertinggi
+
+2.fungsi sorting, mensorting berdasarkan nama, raw, usage, hp, atk, def, spatk, spdef, dan speed. disini saya menggunakan switch case dalam programnya
+
+3.fungsi grep, untuk mencari nama pokemon berdasarkan input.
+
+4.fungsi filter, untuk memfilter pokemon apa saja yang sesuai dengan pencarian berdasarkan type 1 dan type 2
+
+5.fungi error, patokan dipanggil ketika tidak sesuai dengan format
+
+6.fungsi help, digunakan untuk mengakses semua fitur-fitur yang tersedia
+
+7.main disini saya mengguanakn switch case sebagai awalan sebelum memprogram fitur
