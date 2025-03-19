@@ -51,19 +51,211 @@ Efek matrix dengan simbol mata uang yang jatuh secara acak di terminal, menyerup
 Menampilkan daftar 10 proses dengan konsumsi memori tertinggi dalam sistem, diperbarui setiap detik seperti task manager.
 
 #soal_4
+1. Pada soal ini kita ingin membuat program mengguanakan C++. Kita ingin membuat beberapa fitur dengan menyelami file csv (pokemon_usage.csv). Pertama kita mendownload filenya untuk dianalisis lebih dalam.
 
-Script Bash ini menampilkan fitur-fitur berupa:
+2. Untuk fitur pertama, kita ditugaskan untuk mencari data mengenai pokemon yang memiliki nilai pada kolom usage dan rawUsage tertinggi
 
-1.fungsi info, menampilkan informasi terkait pokemon dengan usage dan raw tertinggi
+        info(){
+        usage=`awk 'BEGIN {FS=","; col1=""; col2=0} NR>2 {{sub(/%/, "", $2); if($2+0>col2) {col1=$1; col2=$2+0}}} END{print "Highest Adjusted Usage: " col1 " with " col2 "%"}'   pokemon_usage.csv`
+        rawUsage=`awk 'BEGIN {FS=",";col1="";col3=0} NR>2 {if($3 > col3){col1=$1; col3=$3}} END{print "Highest Raw Usage: " col1 " with " col3 " uses"}' pokemon_usage.csv`
+        
+        echo "=====[The greatest attacking pokemon detected]====="
+        echo "here is information about the pokemon"
+        echo $usage
+        echo $rawUsage
+        exit 0
+        }
+   
+3. Fitur berikutnya adalah fitur sorting secara descending berdasarkan kolom pada file.csv
+   
+        sorting(){
+          case "$3" in
+        	"usage")
+        	head -n1 "$1" && tail -n +2 "$1" | awk 'BEGIN {FS=","; OFS=","} {sub(/%/, "", $2); print $0}' | sort -t, -nr -k2 | awk 'BEGIN {FS=","; OFS=","} {$2 = $2 "%"; print $0}'
+        	;;
+        	"raw")
+        	head -n1 "$1" && tail -n +2 "$1" | sort -t, -nr -k 3
+        	;;
+        	"name")
+        	head -n1 "$1" && tail -n +2 "$1" | sort -t, -r -k 1
+        	;;
+        	"hp")
+        	head -n1 "$1" && tail -n +2 "$1" | sort -t, -nr -k 6
+        	;;
+        	"atk")
+        	head -n1 "$1" && tail -n +2 "$1" | sort -t, -nr -k 7
+        	;;
+        	"def")
+        	head -n1 "$1" && tail -n +2 "$1" | sort -t, -nr -k 8
+        	;;
+        	"spatk")
+        	head -n1 "$1" && tail -n +2 "$1" | sort -t, -nr -k 9
+        	;;
+        	"spdef")
+        	head -n1 "$1" && tail -n +2 "$1" | sort -t, -nr -k 10
+        	;;
+        	"speed")
+        	head -n1 "$1" && tail -n +2 "$1" | sort -t, -nr -k 11
+        	;;
+        	*)
+        	error
+        	;;
+        esac
+        exit 0
+        }
 
-2.fungsi sorting, mensorting berdasarkan nama, raw, usage, hp, atk, def, spatk, spdef, dan speed. disini saya menggunakan switch case dalam programnya
+4. Fitur ketiga adalah fitur untuk mencari data pokemon berdasarkan nama yang diinput
+   
+        greping(){
+        	nama="$3"
+        
+        	if [ -z "$nama" ]; then
+                	echo "Error: no name detected"
+                exit 1
+        	fi
+        
+        	head -n1 "$1" && tail -n +2 "$1" | awk  -v nama="$nama" 'BEGIN{FS=","; found=0} $1 ~ ("^" nama) {found=1; print} END{if(found==0)print "No name available"}'
+        	exit 0
+        }
 
-3.fungsi grep, untuk mencari nama pokemon berdasarkan input.
+5. Fitur keempat adalah fitur filter, dimana kita bisa mencari data pokemon sesuai dengan type pokemon (di file.csv terdapat 2 jenis type)
 
-4.fungsi filter, untuk memfilter pokemon apa saja yang sesuai dengan pencarian berdasarkan type 1 dan type 2
+        filter(){
+        
+        	fil="$3"
+        
+                if [ -z "$fil" ]; then
+                        echo "Error: no name detected"
+                exit 1
+                fi
+        
+        	head -n1 "$1" && tail -n +2 "$1" | awk -v fil="$fil" 'BEGIN{FS=","; found=0} $4 ~ (fil) || $5 ~ (fil) {found=1; print} END{if(found==0) print "No name available"}'
+        	exit 0
+        }
 
-5.fungi error, patokan dipanggil ketika tidak sesuai dengan format
+6. Fitur kelima adalah error handling, di sini saya membuat 2 jenis error handling, error1() -argumen 1/file- dan error() -argument 2 dan 3-
 
-6.fungsi help, digunakan untuk mengakses semua fitur-fitur yang tersedia
+        error1(){
+            if [ -z "$1" ] || [ ! -f "$1" ]; then
+                echo "Error: no file provided"
+                echo "Use -h or --help for more information"
+                exit 1
+            fi
+        }
+        
+        error(){
+                echo "Error: no option provided"
+                echo "Use -h or --help for more information"
+                exit 1
+        }
 
-7.main disini saya mengguanakn switch case sebagai awalan sebelum memprogram fitur
+5. FItur terakhir adalah fitur help, dimana fitur ini menampilkan fitur-fitur tersedia yang bisa diakses oleh user.
+
+        help(){
+        cat << "logo"
+                                                                                  %%%##                                                            
+                                                                                %%%#####                                                           
+                                                                               %%###**###                                                          
+                                                                             %%%##*++**###                                                         
+                                                             ## @%%         %%##*+++*#####                                                         
+                       %########%%                    ########%%%####     %%###***#####      ###################                                   
+                 %%%#################%           %#########*##%%#######  %@%%##########    %%############****###       %%%#####                    
+             %%######***+++++++****#####       %%%###**++++*####*+**##### %%##############%%%##*++++**##++++*###       %%%#############            
+          %%%####*+++++++++++++++++***####     %%%##***++++*###*++++**#######*+++++++***###%%##++++++*##++++*####      %%%##******####%%########   
+        @@%###+++++++++++++++++++++++**###     %%%#####++++*##++++++++*###*++++*##*+++++*#####*++++++*#*+++++*###      %%%###*+++++*###%##*########
+        %%%%%##+++++++++++++++***+++++**###    %%%%%%##++++**++++++++####++++*######+++*###%##*++++++***+++++*### #######%%%#*+++++**####*+++***###
+         %%%%%##++++++++++++*####%#++++*###  #####%%%##*+++++++++++#####*+++*## ##*++*####%%##++++++++*++++++*#######****####*++++++*####+++++*### 
+          %%%%%##**#*+++++++*######*+++*########**#####*+++++++++*######*+++*####+++##########+++++++++++++++*###****#*++***###+++++**##*+++++#### 
+           %%%%%#####++++++++*#%###*++*####*++*#*+++**###+++++++#########++++*#+++###*++**####*++++++++++++++###++*##++++****##*+++++*##+++++*###  
+            %%%%%%%###+++++++*#%%#*++*###*++*##++++****##*+++++++***#####*++++++++++++++++*###*+++*#++++++++###++*####***#*+**##+++++*#*++++*###   
+              %% %%%###+++++++*#*+++####*++*####++*#*+**##++++++++++++**###*++++++++++++*####+++++*#*+++*#+*##+++**#######+++*##+**++**+++++*###   
+                 %%%%%#*++++++++++######+++**#######+++*##++*###*++++++**#####******#####%##*++++*###*+*##+*##+++++*****++++*##*+**++++++++*###    
+                  %%%%##*++++++*###%%%#*++++******++++*##*++*#######*++++***########%%%@%%##*++++*########**##*++++++++++++*##*++#*++++++++####    
+                   %%%%##++++++**##%%%##++++++++++++++###+++*##%%%%#####*++++++*##%@@  @%%######*##%%#####***##*++++++++++*##*++*#*+++++++*###     
+                    %%%%##++++++*##%%%%#*+++++++++++*###*+++*###%%%%%%%####*+++*###    %%%%%%%%%%##%%%#%##*+**####*****####*++++*##++++++*###      
+                    @@@%%##+++++**##%%%%##*+++++++####%#*+++*###    %%%%%%%########        %%%%%%%%%%%%%%##+++***######%%%#*++++###++++++####      
+                     %@%%%##+++++*###@%%%%########%%%%%#########        %%%%%%%####                 % %%%###########@  %%####***###+++++*###       
+                      @%%%##*++++**### @@%%%%%%%@@ @@%%%%%%%%@@             %%%%%%%                   %%%%%%%%%%%%### @%%%%%%######++++*###        
+                       @@%%##*++++*####    @%@      @@@@                       %%                             @%%%%      %%%%%%%%##*+++*###        
+                        @%%%##*#######%                                                                                       %%%#########@@@      
+                         %%%%##%%%%%%                                                                                         %%%%%%%%%###         
+                         @@%@@@                                                                                                     %%%            
+                                                                                                                                                   
+                                                                                                                                                   
+                                                                                           @@%#####%@                                              
+                                                                                         @############@                                            
+                                                                                         %%############@                                           
+                                                                                        @+#######%%%%###@                                          
+                                                                @@##***##%@            @@@#######%@=####@                                    @@@@  
+                    @@                                        @#*****#******%@       @%#%########%@%@###@      @@@@                         @@@@@  
+                   @#%@                                     @#****#++%*******#@      @%###########%%%###@      @@@@@@@@                    @%@@@@  
+              @%##@%#####%%%%@@@@@                         @%****#@@@@#*****##%       @%@%#############%         @@@%++#@                 @*+#@@   
+              @%####%#############%#%@                @%@  @#****#%%%%*******#@        @%#****###%#####@          @@@++++*@               #++*@@   
+              @%#####%##############@#%@            @@%*%#@##***#**%%#******#@@         @#%##%%#######%             @%+++++#@    @@@     @*+++%    
+              %%######@######%%%#####%%@@@@@@%#**%@ %#**#**#%****##%##*******##           @%%%%#######@ @@@           @#*+++*#*+++++++*%@#+++#     
+             @%#############%****#%***************@ @%#******@**********%#*#%#@          @#%++####%####@@#+**@@          @#++++++++++++++*++%      
+            @%#########@###%#************#%%%%#***%@@%###*****#%************#@          %##++++*%######% %++++++*%@     @*+++%##*++++++++++#       
+           @#%##########%##%#************%%%%#*****@%#####*****#*#%#*****#%%@          ##%+++++########% @*+++++++++*@  #+++#@@@#++++++#*+%+%      
+          @#%############%%##********#*%%*******#*##%##%####**%*+++*****#*****#@@    @%###++++#######%##@@*++++++++++++****#*+*+++++*++*@@#+#@     
+         @%#%#############@##***##%%%*%*#****%%%#%##%%#%+#%%#%++##++++++*#******#@  @%%##*+++#######%###% %+++++++++++###%%%%*++*%%%%##+++###@     
+         @##%###########@*%##**#**%=#@******%%%%*#*%#%%*+#+++%+++++**%***###****@      @@+++++####%######@@*++++++++#*++*%%%%*+++%%%%#++*%%%@      
+         @%##%########@%%#*****%+#%+#%%**********%%%*#++%*+++%*++++++#++# @@@@@         @++++++*#++%######@%#**+++++#*++++*#++++++#%*+++#%%@       
+          @###@####%%%%%@#*****%+*%%%%%**********#@#*##*++++*#*+++++%*+*@               @++++++++++%#######@     @@#*#++++++**++++++++++#@@@@@@@@  
+           @%##%%%#%%%%@*******#*##%%%*************#%%**##*#+++*%#*#*+*%                @*+++++++++%########@       %*%++++++*++++++++++++++++++*% 
+             @@@******#*********#@%##***********%%*#%****##+++++++****%*@                @+++++++++%########%@    @*++#%++++++++++++++++++#++++%@  
+             @%*******##*****#%*****************#@#*******%******###%****@              @#%*++++++###########@    @#+*% @*++++++++++++++++#*#@     
+             %#%%%%**%#********###%%%#####%%%%#***%******#%****#%##******@             @####%*++++%#########%##%@   @#+*%*+++++++++++++++++%       
+            @#%%%%#**%**#@%#***%#############*****##****#%      @%###****#@            ########%#**#########%#######+*%#%%+++++++++++++++++#@      
+            @**#%#***%*@%%%#***%#############***%%#%***#@         @%#####%@            @%######%@  @#######%#%#######%%%#+++++++++++++++++++%      
+            @#*******%**@%@#***%#########%%##**#%%%#@*#@            @@@               %%########%    %#####@@@%**#%%@@%@%#++++++++++++++++++#      
+            @%##*****%#**#%***#%%%%%%%@@  @##****#*#@                                %##*#+%%%@@     @######%        @@@*+++++++++++++++++++%      
+             @#######%%#******@#%#%#+%     @##****#*#                                                @######@          @#++++++++++++++++++#@      
+               @#@#%%#@@%#####  @@@@        @@%%*@#@                                                 @+#%+%%+%          @#*++******########%@      
+                        @@@@                                                                          @  @@             @***@@@        @@**#%@     
+                                                                                                                        @##@               @@      
+                                                                                                                                                  
+        logo
+        
+        	echo "Usage: ./pokemon_analysis.sh <file.name> [options]"
+        	echo "Options:"
+        	echo "  -h, --help		Display this help message"
+        	echo "  -i, --info              Display the highest adjusted and raw usage" 
+        	echo "  -s, --sort <method>     Sort the data by the specific column." 
+        	echo "    name                  Sort by Pokemon Name" 
+                echo "    usage                 Sort by Adjusted Usage" 
+                echo "    raw                   Sort by Raw Usage" 
+                echo "    hp                    Sort by HP" 
+                echo "    atk                   Sort by Attack" 
+                echo "    def                   Sort by Defense" 
+                echo "    spatk                 Sort by Special Attack" 
+                echo "    spdef                 Sort by Special Defense" 
+                echo "    speed                 Sort by Speed" 
+        	echo "  -g, --grep <name>       Search for a specific pokemon sorted by usage" 
+        	echo "  -f, --filter <type>     Filter by type of pokemon sorted by type" 
+        }
+
+6. Untuk main, saya menggunakan switch case untuk user dalam mengakses fitur. Untuk mengakses fiturnya, input diambil dari argumen-argumen dari user. Kami juga memanggil fungsi error1 untuk error handling pada argumen pertama (file)
+
+        error1 "$@"
+        
+        option="$2"
+        case "$option" in 
+        	--info|-i)
+        	info "$@"
+        	;;
+        	--sort|-s)
+        	sorting "$@"
+        	;;
+        	--filter|-f)
+        	filter "$@"
+        	;;
+        	--help|-h)
+        	help "$@"
+        	;;
+        	--grep|-g)
+        	greping "$@"
+        	;;
+        	*)
+        	error
+        	;;
+        esac
