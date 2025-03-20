@@ -23,7 +23,8 @@ Penjelasannya:
 
 2.Langkah kedua adalah menghitung rata-rata durasi membaca untuk pembaca yang menggunakan media Tablet.
 
-        avg_duration=$(awk -F, '$8 == "Tablet" && $6 > 0 {sum+=$6; count++} END {if (count > 0) print sum/count; else print 0}' reading_data.csv) echo "Rata-rata durasi membaca dengan Tablet adalah $avg_duration menit."
+        avg_duration=$(awk -F, '$8 == "Tablet" && $6 > 0 {sum+=$6; count++} END {if (count > 0) print sum/count; else print 0}' reading_data.csv)
+echo "Rata-rata durasi membaca dengan Tablet adalah $avg_duration menit."
 
 Penjelasannya: 
 - Memfilter baris dengan media membaca "Tablet" (kolom ke-8) dan durasi baca > 0
