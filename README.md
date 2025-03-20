@@ -31,11 +31,7 @@ Penjelasannya:
 - membagi total durasi dengan jumlah pembaca untuk mendapatkan rata-rata.
 
 3. Langkah selanjutnya adalah mencari siapa pembaca dengan rating tertinggi, sekaligus menampilkan nama pembaca dan judul buku.
-
-    highest_rating=$(awk -F, 'NR > 1 && $7 >= 0 && $7 <= 5 {if ($7+0 > max+0) {max=$7; name=$2; title=$3}} END {print name, "-", title, "-", max+0}>if [ -z "$highest_rating" ]; then
-    highest_rating="Tidak ada data"
-fi
-echo "Pembaca dengan rating tertinggi: $highest_rating"
+        highest_rating=$(awk -F, 'NR > 1 && $7 >= 0 && $7 <= 5 {if ($7+0 > max+0) {max=$7; name=$2; title=$3}} END {print name, "-", title, "-", max+0}>if [ -z "$highest_rating" ]; then highest_rating="Tidak ada data" fi echo "Pembaca dengan rating tertinggi: $highest_rating"
 
 Penjelasannya:
 - NR > 1 digunakan untuk melewati baris header CSV.
