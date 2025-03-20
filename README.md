@@ -9,28 +9,54 @@ Abiyyu Raihan Putra Wikanto  - 5027241042
 ============[Laporan Resmi Penjelasan Soal]=============
 
 #soal_1
-Script Bash ini memproses data dari file CSV dan menampilkan informasi terkait dengan pembacaan buku oleh berbagai individu. Fitur-fitur dalam script ini meliputi perhitungan jumlah buku yang dibaca, rata-rata durasi membaca dengan perangkat tertentu, pencarian pembaca dengan rating tertinggi, dan pencarian genre buku paling populer di Asia setelah tahun 2023.
+Pada soal ini, kita diminta untuk membuat sebuah program Bash yang memproses file reading_data.csv menggunakan kombinasi perintah awk, sort, dan kondisi if else. Program ini terdiri dari beberapa logika utama sesuai instruksi soal, yaitu:
 
--- awk -F, '$2 == "Chris Hemsworth" {count++} END {print count+0}' reading_data.csv:
-Memeriksa kolom kedua untuk menemukan nama "Chris Hemsworth".
-Menghitung jumlah baris yang sesuai, yang menunjukkan jumlah buku yang dibaca oleh Chris Hemsworth.
-Menampilkan hasil berupa jumlah buku yang dibaca.
+1. Langkah pertama adalah menghitung berapa banyak buku yang telah dibaca oleh pembaca bernama Chris Hemsworth. Untuk itu, kita menggunakan awk dengan kondisi filter pada kolom kedua (kolom nama pembaca).
+   
+   chris_books=$(awk -F, '$2 == "Chris Hemsworth" {count++} END {print count+0}' reading_data.csv)
+echo "Chris Hemsworth membaca $chris_books buku."
 
--- awk -F, '$8 == "Tablet" && $6 > 0 {sum+=$6; count++} END {if (count > 0) print sum/count; else print 0}' reading_data.csv:
-Memeriksa kolom kedelapan untuk menemukan perangkat "Tablet".
-Menjumlahkan durasi membaca dari kolom keenam yang lebih besar dari 0.
-Menghitung rata-rata durasi membaca dengan membagi total durasi dengan jumlah pembaca yang menggunakan tablet.
-Menampilkan hasil berupa rata-rata durasi membaca dengan tablet.
+Penjelasannya: 
+-Menggunakan awk dengan delimiter koma -F, untuk memisahkan kolom.
+-memfilter data yang memiliki nama "Chris Hemsworth" di kolom kedua
+-Menghitung jumlah baris yang cocok, lalu mencetak totalnya.
 
---awk -F, 'NR > 1 && $7 >= 0 && $7 <= 5 {if ($7+0 > max+0) {max=$7; name=$2; title=$3}} END {print name, "-", title, "-", max+0}' reading_data.csv:
-Memeriksa kolom ketujuh untuk rating antara 0 hingga 5.
-Menyimpan rating tertinggi dan menampilkan nama pembaca, judul buku, dan rating tertinggi.
-Jika tidak ada data yang cocok, menampilkan "Tidak ada data".
+2.Langkah kedua adalah menghitung rata-rata durasi membaca untuk pembaca yang menggunakan media Tablet.
+        avg_duration=$(awk -F, '$8 == "Tablet" && $6 > 0 {sum+=$6; count++} END {if (count > 0) print sum/count; else>echo "Rata-rata durasi membaca dengan Tablet adalah $avg_duration menit."
 
+Penjelasannya: 
+- Memfilter baris dengan media membaca "Tablet" (kolom ke-8) dan durasi baca > 0
+- menjumlahkan durasi (kolom ke-6) ke variabel sum, serta menghitung jumlah data valid dengan count.
+- membagi total durasi dengan jumlah pembaca untuk mendapatkan rata-rata.
+
+3. Langkah selanjutnya adalah mencari siapa pembaca dengan rating tertinggi, sekaligus menampilkan nama pembaca dan judul buku.
+           highest_rating=$(awk -F, 'NR > 1 && $7 >= 0 && $7 <= 5 {if ($7+0 > max+0) {max=$7; name=$2; title=$3}} END {p>if [ -z "$highest_rating" ]; then
+    highest_rating="Tidak ada data"
+fi
+echo "Pembaca dengan rating tertinggi: $highest_rating"
+
+Penjelasannya:
+- NR > 1 digunakan untuk melewati baris header CSV.
+- Memastikan rating berada di rentang 0-5
+- Menyimpan data rating tertinggi beserta nama dan judul buku
+- Jika tidak ada data valid, akan menampilkan "Tidak ada data".
+
+4. Terakhir, kita diminta mencari genre paling populer di wilayah Asia setelah tanggal 31 Desember 2023.
+popular_genre=$(awk -F, '$9 == "Asia" && $5 > "2023-12-31" {count[$4]++} END {for (genre in count) print genr>
+
+if [ -z "$popular_genre" ]; then
+    echo "Genre paling populer di Asia setelah 2023 adalah Tidak ada data"
+else
+    genre_name=$(echo "$popular_genre" | awk '{print $1}')
+    genre_count=$(echo "$popular_genre" | awk '{print $2}')
+    echo "Genre paling populer di Asia setelah 2023 adalah $genre_name dengan $genre_count buku."
+fi
+
+Penjelasannya: 
+- Memfilter data berdasarkan wilayah Asia (kolom ke-9) dan tanggal membaca setelah 2023-12-31 (kolom ke-5).
+- Menghitung frekuensi genre (kolom ke-4) dengan associative array di awk
+- Sorting hasil berdasarkan jumlah terbanyak dan mengambil genre terpopuler dengan head -n1.
 --awk -F, '$9 == "Asia" && $5 > "2023-12-31" {count[$4]++} END {for (genre in count) print genre, count[genre]}' reading_data.csv:
-Memeriksa kolom kesembilan untuk menemukan lokasi "Asia" dan kolom kelima untuk tanggal setelah 2023.
-Menghitung frekuensi genre buku berdasarkan kolom keempat, dan menampilkan genre yang paling populer.
-Jika tidak ada data yang sesuai, menampilkan "Tidak ada data".
 
 #soal_3
 Script Bash ini menampilkan berbagai fitur interaktif. Fitur-fitur berupa tampilan word of affirmation (untuk Speak to Me), progress bar (On the Run), jam real-time (Time), efek matrix dengan simbol mata uang (Money), dan Penunjuk proses (Brain Damage).
