@@ -42,8 +42,7 @@ Penjelasannya:
 
 4. Terakhir, kita diminta mencari genre paling populer di wilayah Asia setelah tanggal 31 Desember 2023.
 
-popular_genre=$(awk -F, '$9 == "Asia" && $5 > "2023-12-31" {count[$4]++} END {for (genre in count) print genre, count[genre]}' reading_data.csv>
-
+        popular_genre=$(awk -F, '$9 == "Asia" && $5 > "2023-12-31" {count[$4]++} END {for (genre in count) print genre, count[genre]}' reading_data.csv>
 if [ -z "$popular_genre" ]; then
     echo "Genre paling populer di Asia setelah 2023 adalah Tidak ada data"
 else
