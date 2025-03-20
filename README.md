@@ -10,42 +10,42 @@ Abiyyu Raihan Putra Wikanto  - 5027241042
 
 #soal_1
 Pada soal ini, kita diminta untuk membuat sebuah program Bash yang memproses file reading_data.csv menggunakan kombinasi perintah awk, sort, dan kondisi if else. Program ini terdiri dari beberapa logika utama sesuai instruksi soal, yaitu:
-
+```markdown
 1. Langkah pertama adalah menghitung berapa banyak buku yang telah dibaca oleh pembaca bernama Chris Hemsworth.
-
+```bash
 chris_books=$(awk -F, '$2 == "Chris Hemsworth" {count++} END {print count+0}' reading_data.csv)
 echo "Chris Hemsworth membaca $chris_books buku."
-
+```markdown
 Penjelasannya: 
 -Menggunakan awk dengan delimiter koma -F, untuk memisahkan kolom.
 -memfilter data yang memiliki nama "Chris Hemsworth" di kolom kedua
 -Menghitung jumlah baris yang cocok, lalu mencetak totalnya.
-
+```markdown
 2.Langkah kedua adalah menghitung rata-rata durasi membaca untuk pembaca yang menggunakan media Tablet.
-      
+```bash   
         avg_duration=$(awk -F, '$8 == "Tablet" && $6 > 0 {sum+=$6; count++} END {if (count > 0) print sum/count; else print 0}' reading_data.csv)
 echo "Rata-rata durasi membaca dengan Tablet adalah $avg_duration menit."
-
+```markdown
 Penjelasannya: 
 - Memfilter baris dengan media membaca "Tablet" (kolom ke-8) dan durasi baca > 0
 - menjumlahkan durasi (kolom ke-6) ke variabel sum, serta menghitung jumlah data valid dengan count.
 - membagi total durasi dengan jumlah pembaca untuk mendapatkan rata-rata.
-
+```markdown
 3. Langkah selanjutnya adalah mencari siapa pembaca dengan rating tertinggi, sekaligus menampilkan nama pembaca dan judul buku.
-
+```bash
     highest_rating=$(awk -F, 'NR > 1 && $7 >= 0 && $7 <= 5 {if ($7+0 > max+0) {max=$7; name=$2; title=$3}} END {print name, "-", title, "-", max+0}>if [ -z "$highest_rating" ]; then
     highest_rating="Tidak ada data"
 fi
 echo "Pembaca dengan rating tertinggi: $highest_rating"
-
+```markdown
 Penjelasannya:
 - NR > 1 digunakan untuk melewati baris header CSV.
 - Memastikan rating berada di rentang 0-5
 - Menyimpan data rating tertinggi beserta nama dan judul buku
 - Jika tidak ada data valid, akan menampilkan "Tidak ada data".
-
+```markdown
 4. Terakhir, kita diminta mencari genre paling populer di wilayah Asia setelah tanggal 31 Desember 2023.
-
+```bash
 popular_genre=$(awk -F, '$9 == "Asia" && $5 > "2023-12-31" {count[$4]++} END {for (genre in count) print genre, count[genre]}' reading_data.csv>
 
 if [ -z "$popular_genre" ]; then
@@ -55,7 +55,7 @@ else
     genre_count=$(echo "$popular_genre" | awk '{print $2}')
     echo "Genre paling populer di Asia setelah 2023 adalah $genre_name dengan $genre_count buku."
 fi
-
+```markdown
 Penjelasannya: 
 - Memfilter data berdasarkan wilayah Asia (kolom ke-9) dan tanggal membaca setelah 2023-12-31 (kolom ke-5).
 - Menghitung frekuensi genre (kolom ke-4) dengan associative array di awk
