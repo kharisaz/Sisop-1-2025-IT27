@@ -14,64 +14,75 @@ info(){
 
 sorting(){
 case "$3" in
-	"usage")
-	head -n1 "$1" && tail -n +2 "$1" | awk 'BEGIN {FS=","; OFS=","} {sub(/%/, "", $2); print $0}' | sort -t, -nr -k2 | awk 'BEGIN {FS=","; OFS=","} {$2 = $2 "%"; print $0}'
-	;;
-	"raw")
-	head -n1 "$1" && tail -n +2 "$1" | sort -t, -nr -k 3
-	;;
-	"name")
-	head -n1 "$1" && tail -n +2 "$1" | sort -t, -r -k 1
-	;;
-	"hp")
-	head -n1 "$1" && tail -n +2 "$1" | sort -t, -nr -k 6
-	;;
-	"atk")
-	head -n1 "$1" && tail -n +2 "$1" | sort -t, -nr -k 7
-	;;
-	"def")
-	head -n1 "$1" && tail -n +2 "$1" | sort -t, -nr -k 8
-	;;
-	"spatk")
-	head -n1 "$1" && tail -n +2 "$1" | sort -t, -nr -k 9
-	;;
-	"spdef")
-	head -n1 "$1" && tail -n +2 "$1" | sort -t, -nr -k 10
-	;;
-	"speed")
-	head -n1 "$1" && tail -n +2 "$1" | sort -t, -nr -k 11
-	;;
-	*)
-	error
-	;;
+        "usage")
+        head -n1 "$1" && tail -n +2 "$1" | awk 'BEGIN {FS=","; OFS=","} {sub(/%/, "", $2); print $0}' | sort -t, -nr -k2 | awk 'BEGIN {FS=","; OFS=","} {$2 = $2 "%"; >
+        ;;
+        "raw")
+        head -n1 "$1" && tail -n +2 "$1" | sort -t, -nr -k 3
+        ;;
+        "name")
+        head -n1 "$1" && tail -n +2 "$1" | sort -t, -k 1
+        ;;
+        "type1")
+        head -n1 "$1" && tail -n +2 "$1" | sort -t, -k 4
+        ;;
+        "type2")
+        head -n1 "$1" && tail -n +2 "$1" | sort -t, -k 5
+        ;;
+        "hp")
+        head -n1 "$1" && tail -n +2 "$1" | sort -t, -nr -k 6
+        ;;
+        "atk")
+        head -n1 "$1" && tail -n +2 "$1" | sort -t, -nr -k 7
+        ;;
+        "def")
+        head -n1 "$1" && tail -n +2 "$1" | sort -t, -nr -k 8
+        ;;
+        "spatk")
+        head -n1 "$1" && tail -n +2 "$1" | sort -t, -nr -k 9
+        ;;
+        "spdef")
+        head -n1 "$1" && tail -n +2 "$1" | sort -t, -nr -k 10
+        ;;
+        "speed")
+        head -n1 "$1" && tail -n +2 "$1" | sort -t, -nr -k 11
+        ;;
+        *)
+        error
+        ;;
 esac
 exit 0
 }
 
 greping(){
-	nama="$3"
+        nama="$3"
 
-	if [ -z "$nama" ]; then
-        	echo "Error: no name detected"
+        if [ -z "$nama" ]; then
+                echo "Error: no file provided"
+                echo "Use -h or --help for more information"
+
         exit 1
-	fi
+        fi
+ 
+        head -n1 "$1" && tail -n +2 "$1" | awk  -v nama="$nama" 'BEGIN{FS=","} tolower($1) ~ ("^" tolower(nama)) {print}' | awk 'BEGIN {FS=","; OFS=","} {sub(/%/, "", $2); print $0}' | sort -t, -nr -k2 | awk 'BEGIN {FS=","; OFS=","} {$2 = $2 "%"; print $0}'
+        exit 0
+ }
 
-	head -n1 "$1" && tail -n +2 "$1" | awk  -v nama="$nama" 'BEGIN{FS=","; found=0} $1 ~ ("^" nama) {found=1; print} END{if(found==0)print "No name available"}'
-	exit 0
-}
 
 filter(){
 
-	fil="$3"
+        fil="$3"
 
         if [ -z "$fil" ]; then
-                echo "Error: no name detected"
+                echo "Error: no file provided"
+                echo "Use -h or --help for more information"
         exit 1
         fi
 
-	head -n1 "$1" && tail -n +2 "$1" | awk -v fil="$fil" 'BEGIN{FS=","; found=0} $4 ~ (fil) || $5 ~ (fil) {found=1; print} END{if(found==0) print "No name available"}'
-	exit 0
+        head -n1 "$1" && tail -n +2 "$1" | awk -v fil="$fil" 'BEGIN{FS=","} tolower($4) ~ tolower(fil) || tolower($5) ~ tolower(fil) {print}' | awk 'BEGIN {FS=","; OFS=","} {sub(/%/, "", $2); print $0}' | sort -t, -nr -k2 | awk 'BEGIN {FS=","; OFS=","} {$2 = $2 "%"; print $0}'
+        exit 0
 }
+
 
 error1(){
     if [ -z "$1" ] || [ ! -f "$1" ]; then
@@ -159,7 +170,9 @@ logo
 	echo "  -s, --sort <method>     Sort the data by the specific column." 
 	echo "    name                  Sort by Pokemon Name" 
         echo "    usage                 Sort by Adjusted Usage" 
-        echo "    raw                   Sort by Raw Usage" 
+        echo "    raw                   Sort by Raw Usage"
+	echo "    type1                 Sort by Type 1" 
+        echo "    type2                 Sort by Type 2" 
         echo "    hp                    Sort by HP" 
         echo "    atk                   Sort by Attack" 
         echo "    def                   Sort by Defense" 
