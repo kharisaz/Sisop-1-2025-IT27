@@ -310,7 +310,6 @@ Ketika fungsi tersebut dipanggil, fungsi akan mengambil kutipan afirmasi dari ht
 		                 %%%%##%%%%%%                                                                                         %%%%%%%%%###         
 		                 @@%@@@                                                                                                     %%%            
 		                                                                                                                                           
-		                                                                                                                                           
 		                                                                                   @@%#####%@                                              
 		                                                                                 @############@                                            
 		                                                                                 %%############@                                           
@@ -342,18 +341,18 @@ Ketika fungsi tersebut dipanggil, fungsi akan mengambil kutipan afirmasi dari ht
 		       @#@#%%#@@%#####  @@@@        @@%%*@#@                                                 @+#%+%%+%          @#*++******########%@      
 		                @@@@                                                                          @  @@             @***@@@        @@**#%@     
 		                                                                                                                @##@               @@      
-		                                                                                                                                          
+		                                                                                                                                           
 		logo
 		
-			echo "Usage: ./pokemon_analysis.sh <file.name> [options]"
-			echo "Options:"
-			echo "  -h, --help		Display this help message"
-			echo "  -i, --info              Display the highest adjusted and raw usage" 
-			echo "  -s, --sort <method>     Sort the data by the specific column." 
-			echo "    name                  Sort by Pokemon Name" 
+		        echo "Usage: ./pokemon_analysis.sh <file.name> [options]"
+		        echo "Options:"
+		        echo "  -h, --help              Display this help message"
+		        echo "  -i, --info              Display the highest adjusted and raw usage" 
+		        echo "  -s, --sort <method>     Sort the data by the specific column." 
+		        echo "    name                  Sort by Pokemon Name" 
 		        echo "    usage                 Sort by Adjusted Usage" 
-		        echo "    raw                   Sort by Raw Usage"
-			echo "    type1                 Sort by Type 1" 
+		        echo "    raw                   Sort by Raw Usage" 
+		        echo "    type1                 Sort by Type 1" 
 		        echo "    type2                 Sort by Type 2" 
 		        echo "    hp                    Sort by HP" 
 		        echo "    atk                   Sort by Attack" 
@@ -361,9 +360,10 @@ Ketika fungsi tersebut dipanggil, fungsi akan mengambil kutipan afirmasi dari ht
 		        echo "    spatk                 Sort by Special Attack" 
 		        echo "    spdef                 Sort by Special Defense" 
 		        echo "    speed                 Sort by Speed" 
-			echo "  -g, --grep <name>       Search for a specific pokemon sorted by usage" 
-			echo "  -f, --filter <type>     Filter by type of pokemon sorted by type" 
+		        echo "  -g, --grep <name>       Search for a specific pokemon sorted by usage" 
+		        echo "  -f, --filter <type>     Filter by type of pokemon sorted by type" 
 		}
+
 
 6. Untuk main, saya menggunakan switch case untuk user dalam mengakses fitur. Untuk mengakses fiturnya, input diambil dari argumen-argumen dari user. Kami juga memanggil fungsi error1 untuk error handling pada argumen pertama (file)
 
