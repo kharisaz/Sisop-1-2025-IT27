@@ -44,11 +44,11 @@ Penjelasannya:
 
         popular_genre=$(awk -F, '$9 == "Asia" && $5 > "2023-12-31" {count[$4]++} END {for (genre in count) print genre, count[genre]}' reading_data.csv>
 if [ -z "$popular_genre" ]; then
-    echo "Genre paling populer di Asia setelah 2023 adalah Tidak ada data"
-else
-    genre_name=$(echo "$popular_genre" | awk '{print $1}')
-    genre_count=$(echo "$popular_genre" | awk '{print $2}')
-    echo "Genre paling populer di Asia setelah 2023 adalah $genre_name dengan $genre_count buku."
+echo "Genre paling populer di Asia setelah 2023 adalah Tidak ada data"
+else 
+genre_name=$(echo "$popular_genre" | awk '{print $1}')
+genre_count=$(echo "$popular_genre" | awk '{print $2}')
+echo "Genre paling populer di Asia setelah 2023 adalah $genre_name dengan $genre_count buku."
 fi
 
 Penjelasannya: 
