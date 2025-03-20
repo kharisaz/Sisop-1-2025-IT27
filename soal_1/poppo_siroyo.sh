@@ -8,8 +8,8 @@ echo "Chris Hemsworth membaca $chris_books buku."
 avg_duration=$(awk -F, '$8 == "Tablet" && $6 > 0 {sum+=$6; count++} END {if (count > 0) print sum/count; else print 0}' reading_data.csv)
 echo "Rata-rata durasi membaca dengan Tablet adalah $avg_duration menit."
 
-# Soal 1c: Mencari pembaca dengan rating tertinggi (hanya rating 0-5)
-highest_rating=$(awk -F, 'NR > 1 && $7 >= 0 && $7 <= 5 {if ($7+0 > max+0) {max=$7; name=$2; title=$3}} END {print name, "-", title, "-", max+0}' reading_data.csv)
+# Soal 1c: Mencari pembaca dengan rating tertinggi (hanya rating 0-10)
+highest_rating=$(awk -F, 'NR > 1 && $7 >= 0 && $7 <= 10 {if ($7+0 > max+0) {max=$7; name=$2; title=$3}} END {print name, "-", title, "-", max+0}' reading_data.csv)
 if [ -z "$highest_rating" ]; then
     highest_rating="Tidak ada data"
 fi
