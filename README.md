@@ -8,15 +8,12 @@ Abiyyu Raihan Putra Wikanto  - 5027241042
 
 ============[Laporan Resmi Penjelasan Soal]=============
 
-# soal_1
+#soal_1
 
 Pada soal ini, kita diminta untuk membuat sebuah program Bash yang memproses file `reading_data.csv` menggunakan kombinasi perintah `awk`, `sort`, dan kondisi `if else`. Program ini terdiri dari beberapa logika utama sesuai instruksi soal, yaitu:
 
----
+##1️⃣ Langkah pertama: Menghitung jumlah buku yang dibaca oleh Chris Hemsworth
 
-## 1️⃣ Langkah pertama: Menghitung jumlah buku yang dibaca oleh Chris Hemsworth
-
-```bash
 chris_books=$(awk -F, '$2 == "Chris Hemsworth" {count++} END {print count+0}' reading_data.csv)
 echo "Chris Hemsworth membaca $chris_books buku."
 
