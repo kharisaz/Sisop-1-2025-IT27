@@ -56,7 +56,8 @@ Penjelasannya:
            fi
 Penjelasannya: 
 - Memfilter data berdasarkan wilayah Asia (kolom ke-9) dan tanggal membaca setelah 2023-12-31 (kolom ke-5).
-- Menghitung frekuensi genre (kolom ke-4) dengan associative array di awk
+- Menghitung frekuensi genre (kolom ke-4) dengan associative array di awk.
+- Sorting hasil berdasarkan jumlah terbanyak dan mengambil genre terpopuler dengan head -n1.
 
 #soal_3
 Script Bash ini menampilkan berbagai fitur interaktif. Fitur-fitur berupa tampilan word of affirmation (untuk Speak to Me), progress bar (On the Run), jam real-time (Time), efek matrix dengan simbol mata uang (Money), dan Penunjuk proses (Brain Damage).
