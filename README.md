@@ -17,9 +17,9 @@ Pada soal ini, kita diminta untuk membuat sebuah program Bash yang memproses fil
         chris_books=$(awk -F, '$2 == "Chris Hemsworth" {count++} END {print count+0}' reading_data.csv) echo "Chris Hemsworth membaca $chris_books buku."
 
 Penjelasannya: 
--Menggunakan awk dengan delimiter koma -F, untuk memisahkan kolom.
--memfilter data yang memiliki nama "Chris Hemsworth" di kolom kedua
--Menghitung jumlah baris yang cocok, lalu mencetak totalnya.
+- Menggunakan awk dengan delimiter koma -F, untuk memisahkan kolom.
+- memfilter data yang memiliki nama "Chris Hemsworth" di kolom kedua
+- Menghitung jumlah baris yang cocok, lalu mencetak totalnya.
 
 2.Langkah kedua adalah menghitung rata-rata durasi membaca untuk pembaca yang menggunakan media Tablet.
 
