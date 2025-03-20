@@ -63,45 +63,73 @@ Penjelasannya:
 
 1. Soal 3 meminta untuk membuat program bash yang dapat melakukan beberapa fitur interaktif dengan menulis ./dsotm.sh --play="NAMATRACK" lalu menggantikan NAMATRACK dengan salah satu track yaitu Speak to Me, On the Run, Time, Money, Brain Damage.
    
-2. Yang pertama dilakukan adalah membuat file dsotm.sh
+2. Yang pertama dilakukan adalah membuat file dsotm.sh serta menambahkan header yang akan muncul ketika memanggil fungsi
 
         nano dsotm.sh
 
-3. Untuk membuat fungsi Speak to Me diperlukan fungsi yang mengutip kutipan afirmasi menggunakan API berkala-kala
+   lalu masukkan
 
-        speak_to_me() {
-            while true; do
-                affirmation=$(curl -s https://www.affirmations.dev/ | jq -r '.affirmation')
-                printf "\e[1;32m%s\e[0m\n" "$affirmation"  
-                sleep 1
-            done
-        }
+	#!/bin/bash
+	
+	clear
+	
+	header() {
+	    echo -e "\e[1;36m========================================\e[0m"
+	    echo -e "\e[1;33m        $1        \e[0m"
+	    echo -e "\e[1;36m========================================\e[0m"
+	}
+
+
+4. Untuk membuat fungsi Speak to Me diperlukan fungsi yang mengutip kutipan afirmasi menggunakan API berkala-kala
+
+	  speak_to_me() {
+	  while true; do
+	        clear
+	        header "Speak to Me - Affirmation"
+	        affirmation=$(curl -s https://www.affirmations.dev/ | jq -r '.affirmation')
+	        echo -e "\e[1;32m$affirmation\e[0m"
+	        sleep 3
+	  done
+	}
 
 Ketika fungsi tersebut dipanggil, fungsi akan mengambil kutipan afirmasi dari https://www.affirmations.dev/ menggunakan curl lalu mengekstrak data json menggunakan jq. \e[1;32m digunakan untuk menghasilkan teks warna hijau dan sleep 1 agar loop dilakukan setiap detik.
 
 4. Untuk fungsi On the Run yaitu membuat animasi progress bar/loading bar dengan Waktu yang beracak.
 
-        on_the_run() {
-            total=50  # Panjang progress bar
-            progress=0
-            while [ $progress -le $total ]; do
-                bar=$(printf "%-${total}s" "=" | sed "s/ /=/g")
-                printf "[\e[1;34m%s\e[0m] %d%%\r" "${bar:0:$progress}" $((progress * 100 / total))
-                sleep $(awk -v min=0.1 -v max=1 'BEGIN{srand(); print min+rand()*(max-min)}')  # Interval acak 0.1 - 1s
-                ((progress++))
-            done
-            echo ""
-        }
+	on_the_run() {
+	    cols=$(tput cols)
+	    total=$((cols - 10))
+	    progress=0
+	
+	    echo -e "\n\e[1;34mOn the Run - Loading...\e[0m"
+	    echo -n "["
+	
+	    while [ $progress -lt $total ]; do
+	        printf "\e[1;34m=\e[0m"
+	        sleep $(awk -v min=0.1 -v max=1 'BEGIN{srand(); print min+rand()*(max-min)}')
+	        ((progress++))
+	        percent=$(( (progress * 100) / total ))
+	        printf "\r[%-*s] %3d%%" "$total" "$(printf '=%.0s' $(seq 1 $progress))" "$percent"
+	    done
+	
+	    echo -e "\n\e[1;32mLoading Complete!\e[0m"
+	}
+
 
 5. Fungsi selanjutnya, Time digunakan untuk menampilkan Waktu dan tanggal saat ini.
 
-        time_display() {
-            while true; do
-                clear
-                date +"📅 %Y-%m-%d ⏰ %H:%M:%S"
-                sleep 1
-            done
-        }
+	time_display() {
+	    while true; do
+	        clear
+	        header "Time - Real Time Clock"
+	        echo -e "\e[1;32m⏳ Current Date and Time\e[0m"
+	        echo -e "\e[1;34m-----------------------------\e[0m"
+	        echo -e "\e[1;33m📅 Date : $(date +"%A, %d %B %Y")\e[0m"
+	        echo -e "\e[1;33m⏰ Time : $(date +"%H:%M:%S")\e[0m"
+	        echo -e "\e[1;34m-----------------------------\e[0m"
+	        sleep 1
+	    done
+	}
 
 6. Fungsi Money digunakan untuk memunculkan Cmatrix dengan symbol uang
 
@@ -135,15 +163,18 @@ Ketika fungsi tersebut dipanggil, fungsi akan mengambil kutipan afirmasi dari ht
 
 7. Selanjutnya, fungsi Brain Damage digunakan untuk menampilkan 10 proses yang mengambil memori tertinggi tanpa menggunakan htop
 
-        brain_damage() {
-            while true; do
-                clear
-                echo -e "\e[1;31m=== TASK MANAGER ===\e[0m"
-                ps -eo pid,comm,%cpu,%mem --sort=-%mem | head -n 10  # 10 proses konsumsi memori tertinggi
-                sleep 1
-            done
-        }
-
+	brain_damage() {
+	    while true; do
+	        clear
+	        echo -e "\e[1;36m========================================\e[0m"
+	        echo -e "\e[1;33m        Brain Damage - Task Monitor        \e[0m"
+	        echo -e "\e[1;36m========================================\e[0m"
+	        printf "\e[1;34m%-10s │ %-20s │ %-10s │ %-10s\e[0m\n" "PID" "COMMAND" "CPU%" "MEM%"
+	        echo -e "\e[1;36m--------------------------------------------------------------\e[0m"
+		ps -eo pid,comm,%cpu,%mem --sort=-%mem | head -n 11 | tail -n 10 | awk '{printf "\033[1;33m%-10s │ %-20s │ %-10s │ %-10s\033[0m\n", $1, $2, $3, $4}'
+	        sleep 1
+	    done
+	}
 
 8. Di akhir program, fungsi akan dipanggil berdasarkan input pegguna
 
