@@ -60,22 +60,114 @@ Penjelasannya:
 - Sorting hasil berdasarkan jumlah terbanyak dan mengambil genre terpopuler dengan head -n1.
 
 #soal_3
-Script Bash ini menampilkan berbagai fitur interaktif. Fitur-fitur berupa tampilan word of affirmation (untuk Speak to Me), progress bar (On the Run), jam real-time (Time), efek matrix dengan simbol mata uang (Money), dan Penunjuk proses (Brain Damage).
 
--- Speak to Me
-Menampilkan word of affirmation yang diperbarui setiap detik dengan menggunakan API dari affirmations.dev.
+1. Soal 3 meminta untuk membuat program bash yang dapat melakukan beberapa fitur interaktif dengan menulis ./dsotm.sh --play="NAMATRACK" lalu menggantikan NAMATRACK dengan salah satu track yaitu Speak to Me, On the Run, Time, Money, Brain Damage.
+   
+2. Yang pertama dilakukan adalah membuat file dsotm.sh
 
--- On the Run
-Menampilkan progress bar dengan interval acak.
+        nano dsotm.sh
 
--- Time
-Menampilkan jam real-time yang diperbarui setiap detik, menunjukkan tanggal, jam, menit, dan detik.
+3. Untuk membuat fungsi Speak to Me diperlukan fungsi yang mengutip kutipan afirmasi menggunakan API berkala-kala
 
--- Money
-Efek matrix dengan simbol mata uang yang jatuh secara acak di terminal, menyerupai efek dari cmatrix.
+        speak_to_me() {
+            while true; do
+                affirmation=$(curl -s https://www.affirmations.dev/ | jq -r '.affirmation')
+                printf "\e[1;32m%s\e[0m\n" "$affirmation"  
+                sleep 1
+            done
+        }
 
--- Brain Damage
-Menampilkan daftar 10 proses dengan konsumsi memori tertinggi dalam sistem, diperbarui setiap detik seperti task manager.
+Ketika fungsi tersebut dipanggil, fungsi akan mengambil kutipan afirmasi dari https://www.affirmations.dev/ menggunakan curl lalu mengekstrak data json menggunakan jq. \e[1;32m digunakan untuk menghasilkan teks warna hijau dan sleep 1 agar loop dilakukan setiap detik.
+
+4. Untuk fungsi On the Run yaitu membuat animasi progress bar/loading bar dengan Waktu yang beracak.
+
+        on_the_run() {
+            total=50  # Panjang progress bar
+            progress=0
+            while [ $progress -le $total ]; do
+                bar=$(printf "%-${total}s" "=" | sed "s/ /=/g")
+                printf "[\e[1;34m%s\e[0m] %d%%\r" "${bar:0:$progress}" $((progress * 100 / total))
+                sleep $(awk -v min=0.1 -v max=1 'BEGIN{srand(); print min+rand()*(max-min)}')  # Interval acak 0.1 - 1s
+                ((progress++))
+            done
+            echo ""
+        }
+
+5. Fungsi selanjutnya, Time digunakan untuk menampilkan Waktu dan tanggal saat ini.
+
+        time_display() {
+            while true; do
+                clear
+                date +"📅 %Y-%m-%d ⏰ %H:%M:%S"
+                sleep 1
+            done
+        }
+
+6. Fungsi Money digunakan untuk memunculkan Cmatrix dengan symbol uang
+
+        money_matrix() {
+            symbols=('$' '€' '£' '¥' '¢' '₹' '₩' '₿' '₣') 
+            cols=$(tput cols)  
+            rows=$(tput lines) 
+        
+            declare -A matrix  
+        
+            # Inisialisasi setiap kolom dengan posisi acak
+            for ((i=0; i<cols; i++)); do
+                matrix[$i]=$((RANDOM % rows))
+            done
+        
+            clear
+            while true; do
+                for ((i=0; i<cols; i++)); do
+                    rand_symbol=${symbols[RANDOM % ${#symbols[@]}]}  
+                    tput cup ${matrix[$i]} $i  
+                    printf "\e[1;32m%s\e[0m" "$rand_symbol" 
+                    ((matrix[$i]++)) 
+        
+                    if ((matrix[$i] >= rows)); then
+                        matrix[$i]=0
+                    fi
+                done
+                sleep 0.05  
+            done
+        }
+
+7. Selanjutnya, fungsi Brain Damage digunakan untuk menampilkan 10 proses yang mengambil memori tertinggi tanpa menggunakan htop
+
+        brain_damage() {
+            while true; do
+                clear
+                echo -e "\e[1;31m=== TASK MANAGER ===\e[0m"
+                ps -eo pid,comm,%cpu,%mem --sort=-%mem | head -n 10  # 10 proses konsumsi memori tertinggi
+                sleep 1
+            done
+        }
+
+
+8. Di akhir program, fungsi akan dipanggil berdasarkan input pegguna
+
+        case "$1" in
+          --play="Speak to Me")
+            speak_to_me
+            ;;
+          --play="On the Run")
+            on_the_run
+            ;;
+          --play="Time")
+            time_display
+            ;;
+          --play="Money")
+            money_matrix
+            ;;
+          --play="Brain Damage")
+            brain_damage
+            ;;
+          *)
+            echo "Usage: $0 --play=\"<Track>\""
+            echo "Available Tracks: Speak to Me, On the Run, Time, Money, Brain Damage"
+            ;;
+        esac
 
 #soal_4
 1. Pada soal ini kita ingin membuat program mengguanakan C++. Kita ingin membuat beberapa fitur dengan menyelami file csv (pokemon_usage.csv). Pertama kita mendownload filenya untuk dianalisis lebih dalam.
