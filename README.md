@@ -221,7 +221,7 @@ Ketika fungsi tersebut dipanggil, fungsi akan mengambil kutipan afirmasi dari ht
        sorting(){
         case "$3" in
                 "usage")
-                "usage")head -n1 "$1" && tail -n +2 "$1" | awk 'BEGIN {FS=","; OFS=","} {sub(/%/, "", $2); print $0}' | sort -t, -nr -k2 | awk 'BEGIN {FS=","; OFS=","} {$2 = $2 "%"; print $0}'
+                head -n1 "$1" && tail -n +2 "$1" | awk 'BEGIN {FS=","; OFS=","} {sub(/%/, "", $2); print $0}' | sort -t, -nr -k2 | awk 'BEGIN {FS=","; OFS=","} {$2 = $2 "%"; print $0}'
                 ;;
                 "raw")
                 head -n1 "$1" && tail -n +2 "$1" | sort -t, -nr -k 3
