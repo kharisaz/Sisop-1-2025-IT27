@@ -12,8 +12,9 @@ Abiyyu Raihan Putra Wikanto  - 5027241042
 Pada soal ini, kita diminta untuk membuat sebuah program Bash yang memproses file reading_data.csv menggunakan kombinasi perintah awk, sort, dan kondisi if else. Program ini terdiri dari beberapa logika utama sesuai instruksi soal, yaitu:
 
 1. Langkah pertama adalah menghitung berapa banyak buku yang telah dibaca oleh pembaca bernama Chris Hemsworth. Untuk itu, kita menggunakan awk dengan kondisi filter pada kolom kedua (kolom nama pembaca).
-   chris_books=$(awk -F, '$2 == "Chris Hemsworth" {count++} END {print count+0}' reading_data.csv)
-   echo "Chris Hemsworth membaca $chris_books buku."
+```bash
+chris_books=$(awk -F, '$2 == "Chris Hemsworth" {count++} END {print count+0}' reading_data.csv)
+echo "Chris Hemsworth membaca $chris_books buku."
 
 Penjelasannya: 
 -Menggunakan awk dengan delimiter koma -F, untuk memisahkan kolom.
@@ -30,7 +31,8 @@ Penjelasannya:
 - membagi total durasi dengan jumlah pembaca untuk mendapatkan rata-rata.
 
 3. Langkah selanjutnya adalah mencari siapa pembaca dengan rating tertinggi, sekaligus menampilkan nama pembaca dan judul buku.
-           highest_rating=$(awk -F, 'NR > 1 && $7 >= 0 && $7 <= 5 {if ($7+0 > max+0) {max=$7; name=$2; title=$3}} END {p>if [ -z "$highest_rating" ]; then
+
+      highest_rating=$(awk -F, 'NR > 1 && $7 >= 0 && $7 <= 5 {if ($7+0 > max+0) {max=$7; name=$2; title=$3}} END {p>if [ -z "$highest_rating" ]; then
     highest_rating="Tidak ada data" fi echo "Pembaca dengan rating tertinggi: $highest_rating"
 
 Penjelasannya:
@@ -42,7 +44,7 @@ Penjelasannya:
 4. Terakhir, kita diminta mencari genre paling populer di wilayah Asia setelah tanggal 31 Desember 2023.
 popular_genre=$(awk -F, '$9 == "Asia" && $5 > "2023-12-31" {count[$4]++} END {for (genre in count) print genr>
 
-if [ -z "$popular_genre" ]; then
+   if [ -z "$popular_genre" ]; then
     echo "Genre paling populer di Asia setelah 2023 adalah Tidak ada data"
 else
     genre_name=$(echo "$popular_genre" | awk '{print $1}')
