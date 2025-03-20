@@ -2,38 +2,55 @@
 
 clear
 
-# Fungsi untuk Speak to Me
+header() {
+    echo -e "\e[1;36m========================================\e[0m"
+    echo -e "\e[1;33m        $1        \e[0m"
+    echo -e "\e[1;36m========================================\e[0m"
+}
+
 speak_to_me() {
     while true; do
+        clear
+        header "Speak to Me - Affirmation"
         affirmation=$(curl -s https://www.affirmations.dev/ | jq -r '.affirmation')
-        printf "\e[1;32m%s\e[0m\n" "$affirmation"  
-        sleep 1
+        echo -e "\e[1;32m$affirmation\e[0m"
+        sleep 3
     done
 }
 
-# Fungsi untuk On the Run
 on_the_run() {
-    total=50  # Panjang progress bar
+    cols=$(tput cols)
+    total=$((cols - 10))
     progress=0
-    while [ $progress -le $total ]; do
-        bar=$(printf "%-${total}s" "=" | sed "s/ /=/g")
-        printf "[\e[1;34m%s\e[0m] %d%%\r" "${bar:0:$progress}" $((progress * 100 / total))
-        sleep $(awk -v min=0.1 -v max=1 'BEGIN{srand(); print min+rand()*(max-min)}')  # Interval acak 0.1 - 1s
+
+    echo -e "\n\e[1;34mOn the Run - Loading...\e[0m"
+    echo -n "["
+
+    while [ $progress -lt $total ]; do
+        printf "\e[1;34m=\e[0m"
+        sleep $(awk -v min=0.1 -v max=1 'BEGIN{srand(); print min+rand()*(max-min)}')
         ((progress++))
+        percent=$(( (progress * 100) / total ))
+        printf "\r[%-*s] %3d%%" "$total" "$(printf '=%.0s' $(seq 1 $progress))" "$percent"
     done
-    echo ""
+
+    echo -e "\n\e[1;32mLoading Complete!\e[0m"
 }
 
-# Fungsi untuk Time
+
 time_display() {
     while true; do
         clear
-        date +"📅 %Y-%m-%d ⏰ %H:%M:%S"
+        header "Time - Real Time Clock"
+        echo -e "\e[1;32m⏳ Current Date and Time\e[0m"
+        echo -e "\e[1;34m-----------------------------\e[0m"
+        echo -e "\e[1;33m📅 Date : $(date +"%A, %d %B %Y")\e[0m"
+        echo -e "\e[1;33m⏰ Time : $(date +"%H:%M:%S")\e[0m"
+        echo -e "\e[1;34m-----------------------------\e[0m"
         sleep 1
     done
 }
 
-# Fungsi untuk Money
 money_matrix() {
     symbols=('$' '€' '£' '¥' '¢' '₹' '₩' '₿' '₣') 
     cols=$(tput cols)  
@@ -41,7 +58,6 @@ money_matrix() {
 
     declare -A matrix  
 
-    # Inisialisasi setiap kolom dengan posisi acak
     for ((i=0; i<cols; i++)); do
         matrix[$i]=$((RANDOM % rows))
     done
@@ -62,17 +78,19 @@ money_matrix() {
     done
 }
 
-# Fungsi untuk Brain Damage
 brain_damage() {
     while true; do
         clear
-        echo -e "\e[1;31m=== TASK MANAGER ===\e[0m"
-        ps -eo pid,comm,%cpu,%mem --sort=-%mem | head -n 10  # 10 proses konsumsi memori tertinggi
+        echo -e "\e[1;36m========================================\e[0m"
+        echo -e "\e[1;33m        Brain Damage - Task Monitor        \e[0m"
+        echo -e "\e[1;36m========================================\e[0m"
+        printf "\e[1;34m%-10s │ %-20s │ %-10s │ %-10s\e[0m\n" "PID" "COMMAND" "CPU%" "MEM%"
+        echo -e "\e[1;36m--------------------------------------------------------------\e[0m"
+	ps -eo pid,comm,%cpu,%mem --sort=-%mem | head -n 11 | tail -n 10 | awk '{printf "\033[1;33m%-10s │ %-20s │ %-10s │ %-10s\033[0m\n", $1, $2, $3, $4}'
         sleep 1
     done
 }
 
-# Menjalankan fitur
 case "$1" in
   --play="Speak to Me")
     speak_to_me
