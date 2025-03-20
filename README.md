@@ -23,7 +23,8 @@ Penjelasannya:
 
 2.Langkah kedua adalah menghitung rata-rata durasi membaca untuk pembaca yang menggunakan media Tablet.
       
-        avg_duration=$(awk -F, '$8 == "Tablet" && $6 > 0 {sum+=$6; count++} END {if (count > 0) print sum/count; else>echo "Rata-rata durasi membaca dengan Tablet adalah $avg_duration menit."
+        avg_duration=$(awk -F, '$8 == "Tablet" && $6 > 0 {sum+=$6; count++} END {if (count > 0) print sum/count; else print 0}' reading_data.csv)
+echo "Rata-rata durasi membaca dengan Tablet adalah $avg_duration menit."
 
 Penjelasannya: 
 - Memfilter baris dengan media membaca "Tablet" (kolom ke-8) dan durasi baca > 0
@@ -32,7 +33,7 @@ Penjelasannya:
 
 3. Langkah selanjutnya adalah mencari siapa pembaca dengan rating tertinggi, sekaligus menampilkan nama pembaca dan judul buku.
 
-     highest_rating=$(awk -F, 'NR > 1 && $7 >= 0 && $7 <= 5 {if ($7+0 > max+0) {max=$7; name=$2; title=$3}} END {p if [ -z "$highest_rating" ]; then
+    highest_rating=$(awk -F, 'NR > 1 && $7 >= 0 && $7 <= 5 {if ($7+0 > max+0) {max=$7; name=$2; title=$3}} END {print name, "-", title, "-", max+0}>if [ -z "$highest_rating" ]; then
     highest_rating="Tidak ada data"
 fi
 echo "Pembaca dengan rating tertinggi: $highest_rating"
@@ -44,9 +45,10 @@ Penjelasannya:
 - Jika tidak ada data valid, akan menampilkan "Tidak ada data".
 
 4. Terakhir, kita diminta mencari genre paling populer di wilayah Asia setelah tanggal 31 Desember 2023.
-popular_genre=$(awk -F, '$9 == "Asia" && $5 > "2023-12-31" {count[$4]++} END {for (genre in count) print genr>
 
-   if [ -z "$popular_genre" ]; then
+popular_genre=$(awk -F, '$9 == "Asia" && $5 > "2023-12-31" {count[$4]++} END {for (genre in count) print genre, count[genre]}' reading_data.csv>
+
+if [ -z "$popular_genre" ]; then
     echo "Genre paling populer di Asia setelah 2023 adalah Tidak ada data"
 else
     genre_name=$(echo "$popular_genre" | awk '{print $1}')
