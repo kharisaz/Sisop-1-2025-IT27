@@ -22,7 +22,7 @@ Penjelasannya:
 - memfilter data yang memiliki nama "Chris Hemsworth" di kolom kedua
 - Menghitung jumlah baris yang cocok, lalu mencetak totalnya.
 
-2.Langkah kedua adalah menghitung rata-rata durasi membaca untuk pembaca yang menggunakan media Tablet.
+2. Langkah kedua adalah menghitung rata-rata durasi membaca untuk pembaca yang menggunakan media Tablet.
 
         avg_duration=$(awk -F, '$8 == "Tablet" && $6 > 0 {sum+=$6; count++} END {if (count > 0) print sum/count; else print 0}' reading_data.csv)
         echo "Rata-rata durasi membaca dengan Tablet adalah $avg_duration menit."
