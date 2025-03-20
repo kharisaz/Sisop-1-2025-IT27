@@ -14,8 +14,7 @@ Pada soal ini, kita diminta untuk membuat sebuah program Bash yang memproses fil
 
 1. Langkah pertama adalah menghitung jumlah buku yang dibaca oleh Chris Hemsworth
 
-        chris_books=$(awk -F, '$2 == "Chris Hemsworth" {count++} END {print count+0}' reading_data.csv)
-echo "Chris Hemsworth membaca $chris_books buku."
+        chris_books=$(awk -F, '$2 == "Chris Hemsworth" {count++} END {print count+0}' reading_data.csv) echo "Chris Hemsworth membaca $chris_books buku."
 
 Penjelasannya: 
 -Menggunakan awk dengan delimiter koma -F, untuk memisahkan kolom.
