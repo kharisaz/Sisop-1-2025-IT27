@@ -12,9 +12,8 @@ Abiyyu Raihan Putra Wikanto  - 5027241042
 Pada soal ini, kita diminta untuk membuat sebuah program Bash yang memproses file reading_data.csv menggunakan kombinasi perintah awk, sort, dan kondisi if else. Program ini terdiri dari beberapa logika utama sesuai instruksi soal, yaitu:
 
 1. Langkah pertama adalah menghitung berapa banyak buku yang telah dibaca oleh pembaca bernama Chris Hemsworth. Untuk itu, kita menggunakan awk dengan kondisi filter pada kolom kedua (kolom nama pembaca).
-   
    chris_books=$(awk -F, '$2 == "Chris Hemsworth" {count++} END {print count+0}' reading_data.csv)
-echo "Chris Hemsworth membaca $chris_books buku."
+   echo "Chris Hemsworth membaca $chris_books buku."
 
 Penjelasannya: 
 -Menggunakan awk dengan delimiter koma -F, untuk memisahkan kolom.
@@ -22,6 +21,7 @@ Penjelasannya:
 -Menghitung jumlah baris yang cocok, lalu mencetak totalnya.
 
 2.Langkah kedua adalah menghitung rata-rata durasi membaca untuk pembaca yang menggunakan media Tablet.
+      
         avg_duration=$(awk -F, '$8 == "Tablet" && $6 > 0 {sum+=$6; count++} END {if (count > 0) print sum/count; else>echo "Rata-rata durasi membaca dengan Tablet adalah $avg_duration menit."
 
 Penjelasannya: 
@@ -31,9 +31,7 @@ Penjelasannya:
 
 3. Langkah selanjutnya adalah mencari siapa pembaca dengan rating tertinggi, sekaligus menampilkan nama pembaca dan judul buku.
            highest_rating=$(awk -F, 'NR > 1 && $7 >= 0 && $7 <= 5 {if ($7+0 > max+0) {max=$7; name=$2; title=$3}} END {p>if [ -z "$highest_rating" ]; then
-    highest_rating="Tidak ada data"
-fi
-echo "Pembaca dengan rating tertinggi: $highest_rating"
+    highest_rating="Tidak ada data" fi echo "Pembaca dengan rating tertinggi: $highest_rating"
 
 Penjelasannya:
 - NR > 1 digunakan untuk melewati baris header CSV.
