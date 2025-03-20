@@ -13,7 +13,6 @@ Pada soal ini, kita diminta untuk membuat sebuah program Bash yang memproses fil
 
 1. Langkah pertama adalah menghitung berapa banyak buku yang telah dibaca oleh pembaca bernama Chris Hemsworth.
 
-```bash
 chris_books=$(awk -F, '$2 == "Chris Hemsworth" {count++} END {print count+0}' reading_data.csv)
 echo "Chris Hemsworth membaca $chris_books buku."
 
@@ -33,8 +32,10 @@ Penjelasannya:
 
 3. Langkah selanjutnya adalah mencari siapa pembaca dengan rating tertinggi, sekaligus menampilkan nama pembaca dan judul buku.
 
-      highest_rating=$(awk -F, 'NR > 1 && $7 >= 0 && $7 <= 5 {if ($7+0 > max+0) {max=$7; name=$2; title=$3}} END {p>if [ -z "$highest_rating" ]; then
-    highest_rating="Tidak ada data" fi echo "Pembaca dengan rating tertinggi: $highest_rating"
+     highest_rating=$(awk -F, 'NR > 1 && $7 >= 0 && $7 <= 5 {if ($7+0 > max+0) {max=$7; name=$2; title=$3}} END {p if [ -z "$highest_rating" ]; then
+    highest_rating="Tidak ada data"
+fi
+echo "Pembaca dengan rating tertinggi: $highest_rating"
 
 Penjelasannya:
 - NR > 1 digunakan untuk melewati baris header CSV.
@@ -56,8 +57,6 @@ fi
 Penjelasannya: 
 - Memfilter data berdasarkan wilayah Asia (kolom ke-9) dan tanggal membaca setelah 2023-12-31 (kolom ke-5).
 - Menghitung frekuensi genre (kolom ke-4) dengan associative array di awk
-- Sorting hasil berdasarkan jumlah terbanyak dan mengambil genre terpopuler dengan head -n1.
---awk -F, '$9 == "Asia" && $5 > "2023-12-31" {count[$4]++} END {for (genre in count) print genre, count[genre]}' reading_data.csv:
 
 #soal_3
 Script Bash ini menampilkan berbagai fitur interaktif. Fitur-fitur berupa tampilan word of affirmation (untuk Speak to Me), progress bar (On the Run), jam real-time (Time), efek matrix dengan simbol mata uang (Money), dan Penunjuk proses (Brain Damage).
