@@ -119,7 +119,7 @@ Code tersebut memantau penggunaan RAM dengan menghitung persentase penggunaan, m
 		            ;;
 		        6)
 		            echo "Exiting Crontab Manager."
-		            break  # Kembali ke Post-Login Menu setelah keluar
+		            break
 		            ;;
 		        *)
 		            echo "Invalid option. Please select a valid option [1-6]."
