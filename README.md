@@ -59,6 +59,213 @@ Penjelasannya:
 - Menghitung frekuensi genre (kolom ke-4) dengan associative array di awk.
 - Sorting hasil berdasarkan jumlah terbanyak dan mengambil genre terpopuler dengan head -n1.
 
+#soal_2
+Pada soal ini, Anda diminta untuk menambahkan folder soal_2 beserta seluruh isinya ke dalam proyek. Folder ini berisi beberapa file yang digunakan untuk:
+- Memantau penggunaan CPU dan RAM pada sistem.
+- Mengelola tugas-tugas crontab untuk menjalankan proses monitoring secara otomatis.
+- Menyediakan antarmuka pengguna untuk interaksi dengan sistem.
+  
+Langkah-langkah untuk Menyelesaikan soal_2
+
+Langkah 1: Membuat Folder soal_2 dan File-Filenya
+- Buka terminal dan navigasikan ke direktori proyek Anda.
+
+	cd ~/soal_1/Sisop-1-2025-IT27
+
+- Buat folder soal_2 dan struktur direktori di dalamnya:
+
+	mkdir -p soal_2/data mkdir -p soal_2/scripts mkdir -p soal_2/logs
+
+Perintah ini akan membuat tiga folder di dalam soal_2:
+data/: Untuk menyimpan file data seperti player.csv.
+scripts/: Untuk menyimpan skrip yang digunakan untuk monitoring CPU, RAM, dan pengelolaan crontab.
+logs/: Untuk menyimpan file log yang mencatat penggunaan CPU dan RAM.
+
+- Buat file di dalam folder yang baru saja Anda buat:
+
+	touch soal_2/data/player.csv touch soal_2/scripts/core_monitor.sh touch soal_2/scripts/frag_monitor.sh touch soal_2/scripts/manager.sh touch 		 
+ soal_2/terminal.sh
+
+Penjelasan tentang file-file yang akan Anda buat:
+
+player.csv: Data CSV yang berisi informasi tentang pemain.
+core_monitor.sh: Skrip untuk memantau penggunaan CPU.
+frag_monitor.sh: Skrip untuk memantau penggunaan RAM.
+manager.sh: Skrip untuk mengelola jadwal crontab.
+terminal.sh: Skrip utama untuk menjalankan sistem dan interaksi dengan pengguna.
+
+Langkah 2: Menambahkan Skrip untuk Monitoring CPU dan RAM
+
+- Buka file frag_monitor.sh dan masukkan kode berikut:
+
+	#!/bin/bash
+	cpu_usage=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}')
+	cpu_model=$(lscpu | grep "Model name" | sed 's/Model name:\s*//')
+	log_message="[$(date '+%Y-%m-%d %H:%M:%S')] - Core Usage [$cpu_usage%] - Terminal Model [$cpu_model]"
+	echo $log_message >> ./logs/core.log
+
+Penjelasan:
+top -b -n1: Menjalankan perintah top untuk mendapatkan snapshot penggunaan CPU satu kali dalam mode batch.
+grep "Cpu(s)": Menyaring output untuk mendapatkan data penggunaan CPU.
+sed "s/.*, *\([0-9.]*\)%* id.*/\1/": Mengambil nilai idle CPU dari output top.
+awk '{print 100 - $1 "%"}': Menghitung penggunaan CPU dengan mengurangi nilai idle dari 100%.
+echo "Core Usage: $cpu_usage": Menampilkan penggunaan CPU di terminal.
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] - Core Usage [$cpu_usage] - Terminal Model [$(lscpu | grep 'Model name' | cut -d ':' -f2)]" >> $(pwd)/soal_2/logs/core.log: Mencatat penggunaan CPU ke dalam file core.log dengan timestamp dan model CPU.
+
+- Buka file frag_monitor.sh dan masukkan kode berikut:
+
+	ram_usage=$(free | grep Mem | awk '{print $3/$2 * 100.0}') ram_total=$(free -m | grep Mem | awk '{print $2}') ram_available=$(free -m | grep Mem | awk 		'{print $7}') log_message="[$(date '+%Y-%m-%d %H:%M:%S')] - Fragment Usage [$ram_usage%] - Fragment Count [$ram_available MB] -Details[Total:$ram_totalMB, 	Available: $ra> echo $log_message >> ./logs/fragment.log
+
+Penjelasan:
+ram_usage=$(free | grep Mem | awk '{print $3/$2 * 100.0}'):
+Menggunakan perintah free untuk mendapatkan informasi penggunaan RAM, kemudian menghitung persentase penggunaan RAM.
+ram_total=$(free -m | grep Mem | awk '{print $2}'):
+Mengambil total RAM dalam megabyte dengan perintah free -m.
+ram_available=$(free -m | grep Mem | awk '{print $7}'):
+Mengambil RAM yang tersedia dalam megabyte.
+log_message="[$(date '+%Y-%m-%d %H:%M:%S')] - Fragment Usage [$ram_usage%] - Fragment Count [$ram_available MB] - Details [Total: $ram_total MB, Available: $ram_available MB]":
+Menyusun pesan log dengan format timestamp, penggunaan RAM, RAM yang tersedia, serta total dan RAM yang tersedia.
+echo $log_message >> ./logs/fragment.log:
+Menulis pesan log ke dalam file fragment.log di folder logs/.
+
+- Buka file manager.sh dan masukkan kode berikut:
+
+	while true; do
+    echo "ARCAEA Crontab Manager"
+    echo "1. Add CPU - Core Monitor to Crontab"
+    echo "2. Add RAM - Fragment Monitor to Crontab"
+    echo "3. Remove CPU - Core Monitor from Crontab"
+    echo "4. Remove RAM - Fragment Monitor from Crontab"
+    echo "5. View All Scheduled Monitoring Jobs"
+    echo "6. Exit Crontab Manager"
+    read -p "Enter option [1-6]: " choice
+
+    case $choice in
+        1)
+            crontab -l | { cat; echo "*/5 * * * * $(pwd)/scripts/core_monitor.sh >> $(pwd)/logs/core.log"; } | crontab -
+            echo "CPU - Core Monitor added to Crontab."
+            ;;
+        2)
+            crontab -l | { cat; echo "*/5 * * * * $(pwd)/scripts/frag_monitor.sh >> $(pwd)/logs/fragment.log"; } | crontab -
+            echo "RAM - Fragment Monitor added to Crontab."
+            ;;
+        3)
+            crontab -l | grep -v "$(pwd)/scripts/core_monitor.sh" | crontab -
+            echo "CPU - Core Monitor removed from Crontab."
+            ;;
+        4)
+            crontab -l | grep -v "$(pwd)/scripts/frag_monitor.sh" | crontab -
+            echo "RAM - Fragment Monitor removed from Crontab."
+            ;;
+        5)
+            crontab -l
+            ;;
+        6)
+            echo "Exiting Crontab Manager."
+            break  # Kembali ke Post-Login Menu setelah keluar
+            ;;
+        *)
+            echo "Invalid option. Please select a valid option [1-6]."
+            ;;
+    esac
+done
+
+Penjelasan:
+Menu berbasis teks yang memungkinkan pengguna untuk:
+Menambahkan atau menghapus monitoring CPU dan RAM ke dalam crontab.
+Melihat semua pekerjaan yang terjadwal dalam crontab.
+Keluar dari Crontab Manager dan kembali ke menu post-login.
+Perintah crontab yang digunakan:
+crontab -l: Menampilkan daftar pekerjaan crontab yang ada.
+crontab -: Menulis kembali perubahan yang baru.
+grep -v: Menghapus entri tertentu dari crontab.
+Log Monitoring: Semua aktivitas dari core_monitor.sh dan frag_monitor.sh akan tercatat di core.log dan fragment.log.
+
+Langkah 3: Menambahkan Format Log untuk Monitoring
+- Format log untuk penggunaan CPU (core.log):
+Log yang dihasilkan oleh core_monitor.sh akan mencatat data dalam format berikut di logs/core.log:
+
+	CPU[2025-03-20 23:58:36] - Core Usage [0.6%] - Terminal Model [12th Gen Intel(R) Core(TM) i5-12500H]
+
+- Format log untuk penggunaan RAM (fragment.log):
+
+	RAM[2025-03-20 23:58:46] - Fragment Usage [15.6066%] - Fragment Count [3246 MB] - Details [Total: 3847 MB, Available: 3246 MB]
+
+Langkah 4: Menambahkan Terminal untuk Pengguna (terminal.sh)
+
+- Membuat Antarmuka Pengguna: Buka file terminal.sh dan masukkan kode berikut untuk menyediakan antarmuka pengguna:
+
+	echo "ARCAEA TERMINAL"
+
+# Menu utama sebelum login
+while true; do
+    echo "1. Register"
+    echo "2. Login"
+    echo "3. Exit"
+    read -p "Enter option [1-3]: " choice
+
+    case $choice in
+        1)
+            # Panggil skrip register.sh untuk registrasi
+            ./register.sh
+            ;;
+        2)
+            # Panggil skrip login.sh untuk login
+            ./login.sh
+            if [[ $? -eq 0 ]]; then
+                # Jika login berhasil, tampilkan menu post-login
+                while true; do
+                    echo "POST-LOGIN MENU"
+                    echo "1. Crontab Manager (Add/Remove CPU & Fragment Usage)"
+                    echo "2. Exit Arcaea Terminal"
+                    read -p "Enter option [1-2]: " post_login_choice
+
+                    case $post_login_choice in
+                        1)
+                            # Panggil manager.sh untuk menambah/menghapus pekerjaan crontab
+                            ./scripts/manager.sh
+                            ;;
+                        2)
+                            # Keluar dari aplikasi dan kembali ke menu utama
+                            echo "Exiting Post-Login Menu. Returning to Arcaea Terminal."
+                            break
+                            ;;
+                        *)
+                            echo "Invalid option. Please try again."
+                            ;;
+                    esac
+                done
+            else
+                echo "Login failed. Please try again."
+            fi
+            ;;
+        3)
+            # Keluar dari program
+            echo "Exiting Arcaea Terminal."
+            exit 0
+            ;;
+        *)
+	  echo "Invalid option. Please select a valid option."
+            ;;
+    esac
+done
+
+Penjelasan Skrip terminal.sh:
+Menampilkan Menu Utama Sebelum Login:
+echo "ARCAEA TERMINAL": Menampilkan judul "ARCAEA TERMINAL".
+while true; do ... done: Loop tak terbatas untuk menampilkan menu utama sampai pengguna memilih opsi yang valid.
+Menu Pilihan:
+Opsi 1 (Register): Menjalankan skrip register.sh untuk proses registrasi pengguna.
+Opsi 2 (Login): Menjalankan skrip login.sh untuk proses login pengguna. Jika login berhasil, masuk ke menu post-login.
+Opsi 3 (Exit): Keluar dari program.
+Post-Login Menu:
+Jika login berhasil (if [[ $? -eq 0 ]]), menampilkan menu post-login dengan dua opsi:
+Opsi 1 (Crontab Manager): Menjalankan manager.sh untuk mengelola pekerjaan crontab (menambah/menghapus monitoring CPU & RAM).
+Opsi 2 (Exit): Keluar dari menu post-login dan kembali ke menu utama.
+Handling Invalid Options:
+Jika pengguna memilih opsi yang tidak valid, akan muncul pesan "Invalid option. Please try again."
+
+
 #soal_3
 
 1. Soal 3 meminta untuk membuat program bash yang dapat melakukan beberapa fitur interaktif dengan menulis ./dsotm.sh --play="NAMATRACK" lalu menggantikan NAMATRACK dengan salah satu track yaitu Speak to Me, On the Run, Time, Money, Brain Damage.
