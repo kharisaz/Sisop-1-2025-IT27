@@ -192,8 +192,7 @@ Langkah 4: Menambahkan Terminal untuk Pengguna (terminal.sh)
 - Membuat Antarmuka Pengguna: Buka file terminal.sh dan masukkan kode berikut untuk menyediakan antarmuka pengguna:
 
 	echo "ARCAEA TERMINAL"
-
-# Menu utama sebelum login
+Menu utama sebelum login
 while true; do
     echo "1. Register"
     echo "2. Login"
