@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Loop untuk terus menunjukkan menu Crontab Manager
 while true; do
     echo "ARCAEA Crontab Manager"
     echo "1. Add CPU - Core Monitor to Crontab"
@@ -33,7 +32,7 @@ while true; do
             ;;
         6)
             echo "Exiting Crontab Manager."
-            break  # Kembali ke Post-Login Menu setelah keluar
+            break
             ;;
         *)
             echo "Invalid option. Please select a valid option [1-6]."
