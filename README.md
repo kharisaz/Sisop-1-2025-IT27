@@ -60,71 +60,32 @@ Penjelasannya:
 - Sorting hasil berdasarkan jumlah terbanyak dan mengambil genre terpopuler dengan head -n1.
 
 #soal_2
-Pada soal ini, Anda diminta untuk menambahkan folder soal_2 beserta seluruh isinya ke dalam proyek. Folder ini berisi beberapa file yang digunakan untuk:
+
+Pada soal ini, kami diminta untuk menambahkan folder soal_2 beserta seluruh isinya ke dalam proyek. Folder ini berisi beberapa file yang digunakan untuk:
 - Memantau penggunaan CPU dan RAM pada sistem.
 - Mengelola tugas-tugas crontab untuk menjalankan proses monitoring secara otomatis.
 - Menyediakan antarmuka pengguna untuk interaksi dengan sistem.
-  
-Langkah-langkah untuk Menyelesaikan soal_2
 
-Langkah 1: Membuat Folder soal_2 dan File-Filenya
-- Buka terminal dan navigasikan ke direktori proyek Anda.
-
-		cd ~/soal_1/Sisop-1-2025-IT27
-
-- Buat folder soal_2 dan struktur direktori di dalamnya:
+1. Langkah pertama kita membuat Folder untuk soal_2 (data, scripts, dan logs) dan File-Filenya.
 
 		mkdir -p soal_2/data mkdir -p soal_2/scripts mkdir -p soal_2/logs
 
-Perintah ini akan membuat tiga folder di dalam soal_2:
-data/: Untuk menyimpan file data seperti player.csv.
-scripts/: Untuk menyimpan skrip yang digunakan untuk monitoring CPU, RAM, dan pengelolaan crontab.
-logs/: Untuk menyimpan file log yang mencatat penggunaan CPU dan RAM.
-
-- Buat file di dalam folder yang baru saja Anda buat:
 
 			touch soal_2/data/player.csv touch soal_2/scripts/core_monitor.sh touch soal_2/scripts/frag_monitor.sh touch soal_2/scripts/manager.sh touch 		 
 		 soal_2/terminal.sh
 
-Penjelasan tentang file-file yang akan Anda buat:
 
-player.csv: Data CSV yang berisi informasi tentang pemain.
-core_monitor.sh: Skrip untuk memantau penggunaan CPU.
-frag_monitor.sh: Skrip untuk memantau penggunaan RAM.
-manager.sh: Skrip untuk mengelola jadwal crontab.
-terminal.sh: Skrip utama untuk menjalankan sistem dan interaksi dengan pengguna.
-
-Langkah 2: Menambahkan Skrip untuk Monitoring CPU dan RAM
-
-- Buka file frag_monitor.sh dan masukkan kode berikut:
+2. Langkah kedua yakni menambahkan Skrip untuk Monitoring CPU dan RAM pada file frag_monitor.sh
 
 		cpu_usage=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}') cpu_model=$(lscpu | grep "Model name" | sed 's/Model name:\s*//') log_message="[$(date '+%Y-%m-%d %H:%M:%S')] - Core Usage [$cpu_usage%] - Terminal Model [$cpu_model]" echo $log_message >> ./logs/core.log
 
-Penjelasan:
-top -b -n1: Menjalankan perintah top untuk mendapatkan snapshot penggunaan CPU satu kali dalam mode batch.
-grep "Cpu(s)": Menyaring output untuk mendapatkan data penggunaan CPU.
-sed "s/.*, *\([0-9.]*\)%* id.*/\1/": Mengambil nilai idle CPU dari output top.
-awk '{print 100 - $1 "%"}': Menghitung penggunaan CPU dengan mengurangi nilai idle dari 100%.
-echo "Core Usage: $cpu_usage": Menampilkan penggunaan CPU di terminal.
-echo "[$(date '+%Y-%m-%d %H:%M:%S')] - Core Usage [$cpu_usage] - Terminal Model [$(lscpu | grep 'Model name' | cut -d ':' -f2)]" >> $(pwd)/soal_2/logs/core.log: Mencatat penggunaan CPU ke dalam file core.log dengan timestamp dan model CPU.
-
-- Buka file frag_monitor.sh dan masukkan kode berikut:
+Pada kode tersebut memantau penggunaan CPU dengan mengambil snapshot satu kali, menyaring data penggunaan CPU, menghitung persentase penggunaan dengan mengurangkan nilai idle dari 100%, menampilkannya di terminal, dan mencatat hasilnya ke dalam file log dengan timestamp dan model CPU.
 
 		ram_usage=$(free | grep Mem | awk '{print $3/$2 * 100.0}') ram_total=$(free -m | grep Mem | awk '{print $2}') ram_available=$(free -m | grep Mem | awk 		'{print $7}') log_message="[$(date '+%Y-%m-%d %H:%M:%S')] - Fragment Usage [$ram_usage%] - Fragment Count [$ram_available MB] -Details[Total:$ram_totalMB, 	Available: $ra> echo $log_message >> ./logs/fragment.log
 
-Penjelasan:
-ram_usage=$(free | grep Mem | awk '{print $3/$2 * 100.0}'):
-Menggunakan perintah free untuk mendapatkan informasi penggunaan RAM, kemudian menghitung persentase penggunaan RAM.
-ram_total=$(free -m | grep Mem | awk '{print $2}'):
-Mengambil total RAM dalam megabyte dengan perintah free -m.
-ram_available=$(free -m | grep Mem | awk '{print $7}'):
-Mengambil RAM yang tersedia dalam megabyte.
-log_message="[$(date '+%Y-%m-%d %H:%M:%S')] - Fragment Usage [$ram_usage%] - Fragment Count [$ram_available MB] - Details [Total: $ram_total MB, Available: $ram_available MB]":
-Menyusun pesan log dengan format timestamp, penggunaan RAM, RAM yang tersedia, serta total dan RAM yang tersedia.
-echo $log_message >> ./logs/fragment.log:
-Menulis pesan log ke dalam file fragment.log di folder logs/.
+Code tersebut memantau penggunaan RAM dengan menghitung persentase penggunaan, mengambil total dan RAM yang tersedia dalam megabyte, menyusun pesan log berisi informasi tersebut dengan timestamp, lalu mencatatnya ke dalam file fragment.log.
 
-- Buka file manager.sh dan masukkan kode berikut:
+3. Langkah selanjutnya adalah membuat program untuk menampilkan opsi fitur untuk user pada file manager.sh.
 
 			while true; do
 		    echo "ARCAEA Crontab Manager"
@@ -166,18 +127,8 @@ Menulis pesan log ke dalam file fragment.log di folder logs/.
 		    esac
 		done
 
-Penjelasan:
-Menu berbasis teks yang memungkinkan pengguna untuk:
-Menambahkan atau menghapus monitoring CPU dan RAM ke dalam crontab.
-Melihat semua pekerjaan yang terjadwal dalam crontab.
-Keluar dari Crontab Manager dan kembali ke menu post-login.
-Perintah crontab yang digunakan:
-crontab -l: Menampilkan daftar pekerjaan crontab yang ada.
-crontab -: Menulis kembali perubahan yang baru.
-grep -v: Menghapus entri tertentu dari crontab.
-Log Monitoring: Semua aktivitas dari core_monitor.sh dan frag_monitor.sh akan tercatat di core.log dan fragment.log.
+4. Langkah keempat yakni menambahkan Format Log untuk Monitoring
 
-Langkah 3: Menambahkan Format Log untuk Monitoring
 - Format log untuk penggunaan CPU (core.log):
 Log yang dihasilkan oleh core_monitor.sh akan mencatat data dalam format berikut di logs/core.log:
 
@@ -187,13 +138,13 @@ Log yang dihasilkan oleh core_monitor.sh akan mencatat data dalam format berikut
 
 	RAM[2025-03-20 23:58:46] - Fragment Usage [15.6066%] - Fragment Count [3246 MB] - Details [Total: 3847 MB, Available: 3246 MB]
 
-Langkah 4: Menambahkan Terminal untuk Pengguna (terminal.sh)
+5. Langkah terakhir adalah ,menambahkan Terminal untuk Pengguna (terminal.sh)
 
-- Membuat Antarmuka Pengguna: Buka file terminal.sh dan masukkan kode berikut untuk menyediakan antarmuka pengguna:
+menulis program berikut di file terminal.sh untuk menyediakan antarmuka pengguna
 
 		echo "ARCAEA TERMINAL"
 
-Menu utama sebelum login
+Selanjutnya, code berikut untuk menampilkan Menu utama sebelum login
 
 	while true; do
 	    echo "1. Register"
@@ -203,14 +154,11 @@ Menu utama sebelum login
 	
 	    case $choice in
 	        1)
-	            # Panggil skrip register.sh untuk registrasi
 	            ./register.sh
 	            ;;
 	        2)
-	            # Panggil skrip login.sh untuk login
 	            ./login.sh
 	            if [[ $? -eq 0 ]]; then
-	                # Jika login berhasil, tampilkan menu post-login
 	                while true; do
 	                    echo "POST-LOGIN MENU"
 	                    echo "1. Crontab Manager (Add/Remove CPU & Fragment Usage)"
@@ -219,11 +167,9 @@ Menu utama sebelum login
 	
 	                    case $post_login_choice in
 	                        1)
-	                            # Panggil manager.sh untuk menambah/menghapus pekerjaan crontab
 	                            ./scripts/manager.sh
 	                            ;;
 	                        2)
-	                            # Keluar dari aplikasi dan kembali ke menu utama
 	                            echo "Exiting Post-Login Menu. Returning to Arcaea Terminal."
 	                            break
 	                            ;;
@@ -237,7 +183,6 @@ Menu utama sebelum login
 	            fi
 	            ;;
 	        3)
-	            # Keluar dari program
 	            echo "Exiting Arcaea Terminal."
 	            exit 0
 	            ;;
@@ -246,22 +191,6 @@ Menu utama sebelum login
 	            ;;
 	    esac
 	done
-
-Penjelasan Skrip terminal.sh:
-Menampilkan Menu Utama Sebelum Login:
-echo "ARCAEA TERMINAL": Menampilkan judul "ARCAEA TERMINAL".
-while true; do ... done: Loop tak terbatas untuk menampilkan menu utama sampai pengguna memilih opsi yang valid.
-Menu Pilihan:
-Opsi 1 (Register): Menjalankan skrip register.sh untuk proses registrasi pengguna.
-Opsi 2 (Login): Menjalankan skrip login.sh untuk proses login pengguna. Jika login berhasil, masuk ke menu post-login.
-Opsi 3 (Exit): Keluar dari program.
-Post-Login Menu:
-Jika login berhasil (if [[ $? -eq 0 ]]), menampilkan menu post-login dengan dua opsi:
-Opsi 1 (Crontab Manager): Menjalankan manager.sh untuk mengelola pekerjaan crontab (menambah/menghapus monitoring CPU & RAM).
-Opsi 2 (Exit): Keluar dari menu post-login dan kembali ke menu utama.
-Handling Invalid Options:
-Jika pengguna memilih opsi yang tidak valid, akan muncul pesan "Invalid option. Please try again."
-
 
 #soal_3
 
@@ -405,9 +334,14 @@ Ketika fungsi tersebut dipanggil, fungsi akan mengambil kutipan afirmasi dari ht
         esac
 
 #soal_4
-1. Pada soal ini kita ingin membuat program mengguanakan C++. Kita ingin membuat beberapa fitur dengan menyelami file csv (pokemon_usage.csv). Pertama kita mendownload filenya untuk dianalisis lebih dalam.
 
-2. Untuk fitur pertama, kita ditugaskan untuk mencari data mengenai pokemon yang memiliki nilai pada kolom usage dan rawUsage tertinggi
+1. Pada soal ini kita ingin membuat program mengguanakan sheel script. Kita ingin membuat beberapa fitur dengan menyelami file csv (pokemon_usage.csv). Pertama kita medownload file.csv nya serta membuat file untuk program.
+
+		wget "https://drive.usercontent.google.com/u/0/uc?id=1n-2n_ZOTMleqa8qZ2nB8ALAbGFyN4-LJ&export=download" -O pokemon_usage.csv
+
+		touch pokemon_analysis.sh
+
+2. Untuk fitur pertama, kita ditugaskan untuk mencari data mengenai pokemon yang memiliki nilai pada kolom usage dan rawUsage tertinggi. pada code, kami membandingkan coloumn nama pokemon dengan 2 jenis coloumn yang diminta pada soal, coloumn usage dan rawUsage. Kami menggunakan awk untuk memisah nilai file per coloumn, yang nantinya kita loop untuk mencari value yang tertinggi.
 
         info(){
         usage=`awk 'BEGIN {FS=","; col1=""; col2=0} NR>2 {{sub(/%/, "", $2); if($2+0>col2) {col1=$1; col2=$2+0}}} END{print "Highest Adjusted Usage: " col1 " with " col2 "%"}'   pokemon_usage.csv`
@@ -419,8 +353,8 @@ Ketika fungsi tersebut dipanggil, fungsi akan mengambil kutipan afirmasi dari ht
         echo $rawUsage
         exit 0
         }
-   
-3. Fitur berikutnya adalah fitur sorting secara descending berdasarkan kolom pada file.csv
+
+3. Fitur berikutnya adalah fitur sorting berdasarkan kolom pada file.csv. Untuk function ini, kami memprogram untuk mensorting berdasarkan jenis coloumn. Untuk coloumn nama secara ascending dan untuk coloumn selainya kami sorting secara descending.
    
        sorting(){
         case "$3" in
@@ -464,7 +398,7 @@ Ketika fungsi tersebut dipanggil, fungsi akan mengambil kutipan afirmasi dari ht
         exit 0
         }
 
-5. Fitur ketiga adalah fitur untuk mencari data pokemon berdasarkan nama yang diinput
+5. Fitur ketiga adalah fitur untuk mencari data pokemon berdasarkan nama yang diinput. Dalam program ini, hasil pencarian nama pokemon akan tersorting berdasarkan rawUsage tertinggi.
    
         greping(){
         nama="$3"
@@ -481,7 +415,7 @@ Ketika fungsi tersebut dipanggil, fungsi akan mengambil kutipan afirmasi dari ht
            }
 
 
-6. Fitur keempat adalah fitur filter, dimana kita bisa mencari data pokemon sesuai dengan type pokemon (di file.csv terdapat 2 jenis type)
+6. Fitur keempat adalah fitur filter, dimana kita bisa mencari data pokemon sesuai dengan type pokemon (di file.csv terdapat 2 jenis type). Untuk function ini, mirip dengan program grep, dimana hasil pencarian pokemon berdasarkan type akan tersorting berdasarkan rawUsage tertinggi.
 
         filter(){
 
@@ -497,7 +431,7 @@ Ketika fungsi tersebut dipanggil, fungsi akan mengambil kutipan afirmasi dari ht
         exit 0
         }
 
-7. Fitur kelima adalah error handling, di sini saya membuat 2 jenis error handling, error1() -argumen 1/file- dan error() -argument 2 dan 3-
+7. Fitur kelima adalah error handling, di sini saya membuat 2 jenis error handling, yakni error1() untuk handling file atau argumen 1 sedangkan error() merupakan error handling secara general baik untuk argumen 2 atau 3. Perbedaan terdapat pada letak pemanggilan function, dimana error1() diindikasikan pada awal program/main dan error() general kami indikasikan di dalam function fitur sesuai kebutuhan.
 
         error1(){
             if [ -z "$1" ] || [ ! -f "$1" ]; then
