@@ -2,7 +2,6 @@
 
 echo "ARCAEA TERMINAL"
 
-# Menu utama sebelum login
 while true; do
     echo "1. Register"
     echo "2. Login"
@@ -11,14 +10,11 @@ while true; do
 
     case $choice in
         1)
-            # Panggil skrip register.sh untuk registrasi
             ./register.sh
             ;;
         2)
-            # Panggil skrip login.sh untuk login
             ./login.sh
             if [[ $? -eq 0 ]]; then
-                # Jika login berhasil, tampilkan menu post-login
                 while true; do
                     echo "POST-LOGIN MENU"
                     echo "1. Crontab Manager (Add/Remove CPU & Fragment Usage)"
@@ -27,11 +23,9 @@ while true; do
 
                     case $post_login_choice in
                         1)
-                            # Panggil manager.sh untuk menambah/menghapus pekerjaan crontab
                             ./scripts/manager.sh
                             ;;
                         2)
-                            # Keluar dari aplikasi dan kembali ke menu utama
                             echo "Exiting Post-Login Menu. Returning to Arcaea Terminal."
                             break
                             ;;
@@ -45,7 +39,6 @@ while true; do
             fi
             ;;
         3)
-            # Keluar dari program
             echo "Exiting Arcaea Terminal."
             exit 0
             ;;
